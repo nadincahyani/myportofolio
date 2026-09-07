@@ -3,18 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Nadin Putri Cahyani - Portofolio </title>
+    <title>Nadin Putri Cahyani - Portofolio</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com"crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
+    <section id="welcome-screen" class="welcome-screen">
+        <div class="welcome-content">
+            <div class="welcome-icons">
+                <span class="icon">&lt;/&gt;</span>
+                <span class="icon">&#128100;</span>
+                <span class="icon">&#128203;</span>
+            </div>
+            <h1 class="welcome-title">Welcome To My <br><span class="highlight">Portofolio Website</span></h1>
+            <p class="welcome-sub">http://nadin-putri-myportofolio.pws.cs.ui.ac.id/</p>
+        </div>
+    </section>
+
     <header class="site-header">
         <div class="container">
             <a href="#profile" class="brand">Nadin</a>
             <nav>
                 <a href="#profile">Profile</a>
+                <a href="#education">Education</a>
+                <a href="#experience">Experience</a>
             </nav>
         </div>
     </header>
@@ -24,38 +39,123 @@
             <div class="container hero-grid">
                 <div class="hero-identity">
                     <p class="hero-kicker">Information Systems &middot; Universitas Indonesia</p>
-                    <h1>Nadin Putri Cahyani</h1>
-                </div>
-                <div class="hero-photo">
-                    <div class="photo-block"></div>
-                    <img class="avatar" src="/static/img/nadin.jpeg" alt="Photo of Nadin">
-                </div>
-                <div class="hero-details">
-                    <p class="bio">Information Systems student at Universitas Indonesia, spending most days juggling coursework, teaching assistant duties, and student initiatives. Slowly becoming a familiar face around Fasilkom, for better or worse.</p>
-                    <d1 class="meta-list">
-                        <div class="meta-row">
-                            <dt>NPM</dt>
-                            <dd>2506623332</dd>
-                        </div>
-                        <div class="meta-row">
-                            <dt>Program</dt>
-                            <dd>S1 Sistem Informasi</dd>
-                        </div>
-                    </d1>
+                    <h1 class="hero-title">Hi, I'm <br><span class="text-gradient">Nadin Putri Cahyani</span></h1>
+
+                    <p class="bio"><p class="bio">Information Systems student at Universitas Indonesia, spending most days juggling coursework, teaching assistant duties, and student initiatives. Slowly becoming a familiar face around Fasilkom, for better or worse.</p>
+                    </p>
+
                     <div class="social-links">
-                        <a href="https://github.com/nadincahyani" class="social-link">GitHub</a>
-                        <a href="https://linkedin.com/nadin-putri-cahyani" class="social-link">LinkedIn</a>
+                        <a href="/static/cv.pdf" class="social-link btn-cv" download>Download CV</a>
+                        <a href="https://github.com/nadincahyani" class="social-link" target="_blank" rel="noopener">GitHub</a>
+                        <a href="https://www.linkedin.com/in/nadin-putri-cahyani/" class="social-link" terget="_blank" rel="noopener">LinkedIn</a>
                         <a href="mailto:nadin.ptr00@gmail.com" class="social-link">Email</a>
+                    </div>
+                </div>
+
+                <div class="hero-card-wrapper">
+                    <div class="id-card-holder" id="idCard"></div>
+                        <div class="lanyard-strap"></div>
+                        <div class="lanyard-slip"></div>
+
+                        <div class="id-card" data-tilt-max="15" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                            <div class="card-header">
+                                <span class="badge">FASILKOM UI</span>
+                            </div>
+                            <div class="card-photo">
+                                <img src="/static/img/nadin.jpeg" alt="Photo of Nadin">
+                            </div>
+                            <div class="card-details">
+                                <h3>Nadin Putri Cahyani</h3>
+                                <p class="role">S1 Sistem Informasi</p>
+
+                                <dl class="meta-list">
+                                    <div class="meta-row">
+                                        <dt>NPM</dt>
+                                        <dd>2506623332</dd>
+                                    </div>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+        </section>
+
+        <section class="education" id="education">
+            <div class="container education-grid">
+                <div class="education-header">
+                    <p class="education-kicker">ACADEMIC BACKGROUND</p>
+                    <h2 class="education-title"><span class="text-gradient">My Education</span></h2>
+                </div>
+
+                <div class="education-details">
+                    <div class="education-card">
+                        <div class="edu-icon icon-purple">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                            </svg>
+                        </div>
+                        <div class="edu-info">
+                            <h3>Universitas Indonesia</h3>
+                            <p class="edu-sub">S1 Sistem Informasi &middot; 2025 &ndash; Present</p>
+                        </div>
+                        <div class="edu-status-dot"></div>
+                    </div>
+
+                    <div class="education-card">
+                        <div class="edu-icon icon-purple">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                            </svg>
+                        </div>
+                        <div class="edu-info">
+                            <h3>SMAN 1 Cibinong</h3>
+                            <p class="edu-sub">Teknik &middot; 2023 &ndash; 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="experience" id="experience">
+            <div class="container experience-grid">
+                <div class="experience-header">
+                    <p class="experience-kicker">EXPERIENCE & ACTIVITIES</p>
+                    <h2 class="experience-title"><span class="text-gradient">My Activities</span></h2>
+                </div>
+
+                <div class="timeline-container">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <details class="experience-card">
+                            <summary class="card-summary">
+                                <div class="card-top-info">
+                                    <span class="tag-badge">TEACHING ASSISTANT</span>
+                                    <span class="exp-date">2026 &ndash; Present</span>
+                                </div>
+                                <h3 class="exp-role">Teaching Assistant of Discrete Mathemathic 1</h3>
+                                <p class="exp-org">Fakultas Ilmu Komputer, Universitas Indonesia &middot; Depok, Indonesia</p>
+                                <span class="btn-detail">Lihat Detail <i class="arrow-icon">&#9660;</i></span>
+                            </summary>
+                            <div class="card-description">
+                                <p>bla bla</p>
+                            </div>
+                        </details>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
     <footer class="site-footer">
         <div class="container">
             <p>&copy; 2026 Nadin Putri Cahyani. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
         </div>
     </footer>
+
 </body>
 </html>
