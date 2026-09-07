@@ -10,6 +10,7 @@
     --card-bg: #121528;
     --purple-primary: #8A2BE2;
     --purple-glow: #A020F0;
+    --teal-accent: #00D2FF;
     --text-light: #F4F4F9;
     --text-muted: #A0A5C0;
     --border-line: #222744;
@@ -46,58 +47,70 @@ h1, h2, h3, .brand {
     display: inline-block;
 }
 
-/* Welcome Screen */
-.welcome-screen {
+/* Section Welcome */
+.welcome-preloader {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
     background-color: var(--bg-dark);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
+    animation: fadeOutWelcome 0.6s ease forwards;
+    animation-delay: 1.8s; 
+    pointer-events: none;
+}
+
+.welcome-box {
     text-align: center;
-
-    animation: fadeOutWelcome 1s ease 3.5s forwards;
-}
-
-.welcome-content {
-    animation: zoomIn 0.8s ease forwards;
-}
-
-.welcome-icons {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
     display: flex;
-    justify-content: center;
-    gap: 1rem;
-    color: var(--purple-primary);
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 .welcome-title {
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
     font-weight: 700;
+    color: var(--text-light);
     line-height: 1.2;
 }
 
-.welcome-title .highlight {
-    color: var(--purple-glow);
-    text-shadow: 0 0 20px rgba(160, 32, 240, 0.5);
+.loader-line-track {
+    width: 220px;
+    height: 4px;
+    background-color: var(--card-bg);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.welcome-sub {
-    color: var(--text-muted);
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
+.loader-line-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--purple-primary), var(--teal-accent));
+    box-shadow: 0 0 12px rgba(138, 43, 226, 0.9);
+    animation: runLoadingBar 1.6s cubic-bezier(0.65, 0, 0.35, 1) forwards;
 }
 
-@keyframes zoomIn {
-    from { opacity: 0; transform: scale(0.9);}
-    to { opacity: 1; transform: scale(1);}
+@keyframes runLoadingBar {
+    0% { width: 0%; }
+    50% { width: 65%; }
+    100% { width: 100%; }
 }
 
 @keyframes fadeOutWelcome {
-    0% { opacity: 1; visibility: visible;}
-    100% { opacity: 0; visibility: hidden; pointer-events: none;}
+    0% {
+        opacity: 1;
+        visibility: visible;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
 }
 
 /* Header dengan Flexbox */
@@ -191,28 +204,28 @@ h1, h2, h3, .brand {
     font-size: 0.85rem;
     font-weight: 600;
     text-decoration: none;
-    color: #F4F4F9;
-    background-color: #121528;
-    border: 1px solid #222744;
+    color: var(--text-light);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-line);
     border-radius: 8px;
     padding: 0.6rem 1.2rem;
     transition: all 0.3s ease;
 }
 
 .social-link:hover {
-    background-color: #8A2BE2;
-    border-color: #A020F0;
+    background-color: var(--purple-primary);
+    border-color: var(--purple-glow);
     color: #FFFFFF;
     box-shadow: 0 4px 15px rgba(138, 43, 226, 0.4);
     transform: translateY(-2px);
 }
 
-.social-link .btn-cv {
-    background: linear-gradient(135deg, #8A2BE2, #A020F0);
+.social-link.btn-cv {
+    background: linear-gradient(135deg, var(--purple-primary), var(--purple-glow));
     border: none;
 }
 
-.social-link .btn-cv:hover {
+.social-link.btn-cv:hover {
     box-shadow: 0 6px 20px rgba(160, 32, 240, 0.6);
 }
 
@@ -231,7 +244,7 @@ h1, h2, h3, .brand {
     font-size: 0.85rem;
     letter-spacing: 0.1rem;
     text-transform: uppercase;
-    color: #A020F0;
+    color: var(--purple-glow);
     font-weight: 600;
     margin-bottom: 0.5rem;
 }
@@ -239,7 +252,7 @@ h1, h2, h3, .brand {
 .education-title {
     font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.1;
-    color: #F4F4F9;
+    color: var(--text-light);
 }
 
 .education-details {
@@ -251,15 +264,15 @@ h1, h2, h3, .brand {
 .education-card {
     display: flex;
     align-items: center;
-    background-color: #121528;
-    border: 1px solid #222744;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-line);
     border-radius: 16px;
     padding: 1.25rem 1.5rem;
     transition: all 0.3s ease;
 }
 
 .education-card:hover {
-    border-color: #8A2BE2;
+    border-color: var(--purple-primary);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(138, 43, 226, 0.15);
 }
@@ -277,106 +290,24 @@ h1, h2, h3, .brand {
 
 .icon-purple {
     background-color: rgba(138, 43, 226, 0.15);
-    color: #A020F0;
-}
-
-.edu-info h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #F4F4F9;
-    margin-bottom: 0.2rem;
-}
-
-.edu-sub {
-    font-size: 0.88rem;
-    color: #A0A5C0;
-}
-
-CSS
-/* ==========================================
-   EDUCATION SECTION (Mirip Pola Hero)
-   ========================================== */
-.education {
-    padding: 4.5rem 0 5rem;
-}
-
-.education-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.education-kicker {
-    font-size: 0.85rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #A020F0;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-.education-title {
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.1;
-    color: #F4F4F9;
-}
-
-/* Container untuk List Kartu */
-.education-details {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.education-card {
-    display: flex;
-    align-items: center;
-    background-color: #121528;
-    border: 1px solid #222744;
-    border-radius: 16px;
-    padding: 1.25rem 1.5rem;
-    transition: all 0.3s ease;
-}
-
-.education-card:hover {
-    border-color: #8A2BE2;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.15);
-}
-
-/* Icon Box */
-.edu-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 1.25rem;
-    flex-shrink: 0;
-}
-
-.icon-purple {
-    background-color: rgba(138, 43, 226, 0.15);
-    color: #A020F0;
+    color: var(--purple-glow);
 }
 
 .icon-teal {
     background-color: rgba(0, 210, 255, 0.12);
-    color: #00D2FF;
+    color: var(--teal-accent);
 }
 
-/* Text Info */
 .edu-info h3 {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #F4F4F9;
+    color: var(--text-light);
     margin-bottom: 0.2rem;
 }
 
 .edu-sub {
     font-size: 0.88rem;
-    color: #A0A5C0;
+    color: var(--text-muted);
 }
 
 .edu-status-dot {
@@ -411,7 +342,7 @@ CSS
 .experience-title {
     font-size: clamp(2rem, 4vw, 3rem);
     line-height: 1.1;
-    color: #F4F4F9;
+    color: var(--text-light);
 }
 
 .timeline-container {
@@ -426,7 +357,7 @@ CSS
     bottom: 10px;
     left: 7px;
     width: 2px;
-    background-color: #222744;
+    background-color: var(--border-line);
 }
 
 .timeline-item {
@@ -440,28 +371,30 @@ CSS
     top: 24px;
     width: 14px;
     height: 14px;
-    background-color: #8A2BE2;
-    border: 3px solid #090A15;
+    background-color: var(--purple-primary);
+    border: 3px solid var(--bg-dark);
     border-radius: 50%;
     box-shadow: 0 0 8px rgba(138, 43, 226, 0.8);
     z-index: 2;
 }
 
 .experience-card {
-    background-color: #121528;
-    border: 1px solid #222744;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-line);
     border-radius: 16px;
     padding: 1.25rem 1.5rem;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
 }
 
 .experience-card:hover {
-    border-color: #8A2BE2;
-    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.15);
+    border-color: var(--purple-primary);
+    box-shadow: 0 8px 25px rgba(138, 43, 226, 0.2);
+    transform: translateY(-2px);
 }
 
 .card-summary {
-    list-style: none; /* Sembunyikan panah default browser */
+    list-style: none; 
     cursor: pointer;
     position: relative;
 }
@@ -482,45 +415,27 @@ CSS
     font-weight: 700;
     letter-spacing: 0.05em;
     background-color: rgba(138, 43, 226, 0.15);
-    color: #A020F0;
+    color: var(--purple-glow);
     padding: 0.25rem 0.6rem;
     border-radius: 6px;
 }
 
 .exp-date {
     font-size: 0.8rem;
-    color: #A0A5C0;
+    color: var(--text-muted);
 }
 
 .exp-role {
     font-size: 1.1rem;
     font-weight: 600;
-    color: #F4F4F9;
+    color: var(--text-light);
     margin-bottom: 0.2rem;
 }
 
 .exp-org {
     font-size: 0.88rem;
-    color: #A0A5C0;
+    color: var(--text-muted);
     margin-bottom: 1rem;
-}
-
-/* Tombol Lihat Detail */
-.btn-detail {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #F4F4F9;
-    background-color: rgba(138, 43, 226, 0.3);
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    transition: background-color 0.3s ease;
-}
-
-.card-summary:hover .btn-detail {
-    background-color: #8A2BE2;
 }
 
 .arrow-icon {
@@ -534,18 +449,25 @@ CSS
 }
 
 .card-description {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px dashed #222744;
-    font-size: 0.9rem;
-    color: #A0A5C0;
-    line-height: 1.6;
-    animation: fadeIn 0.3s ease forwards;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+    opacity: 0;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
+.card-description p {
+    overflow: hidden;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+.experience-card:hover .card-description {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border-line);
 }
 
 /* ID Card */
@@ -581,7 +503,7 @@ CSS
     top: 0;
     width: 8px;
     height: 70px;
-    background: linear-gradient(180deg, #121528, #3B4268);
+    background: linear-gradient(180deg, var(--card-bg), #3B4268);
     border-radius: 4px;
     z-index: 1;
 }
@@ -591,7 +513,7 @@ CSS
     top: 58px;
     width: 24px;
     height: 12px;
-    background-color: #8A2BE2;
+    background-color: var(--purple-primary);
     border-radius: 3px;
     z-index: 3;
     box-shadow: 0 0 8px rgba(138, 43, 226, 0.6);
@@ -601,8 +523,8 @@ CSS
     width: 100%;
     max-width: 260px;
     margin: 0 auto;
-    background-color: #121528;
-    border: 1px solid #222744;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-line);
     border-radius: 16px;
     padding: 1.5rem;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6),
@@ -641,7 +563,7 @@ CSS
     height: 130px;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid #A020F0;
+    border: 3px solid var(--purple-glow);
     box-shadow: 0 0 15px rgba(160, 32, 240, 0.4);
     transform: translateZ(20px);
 }
@@ -653,13 +575,13 @@ CSS
 .card-details h3 {
     font-size: 1.05rem;
     font-weight: 700;
-    color: #F4F4F9;
+    color: var(--text-light);
     margin-bottom: 0.2rem;
 }
 
 .card-details .role {
     font-size: 0.8rem;
-    color: #A020F0;
+    color: var(--purple-glow);
     margin-bottom: 1rem;
 }
 
