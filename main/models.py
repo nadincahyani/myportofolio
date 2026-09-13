@@ -4,23 +4,26 @@ from django.db import models
 # Create your models here.
 class Experience(models.Model):
     EXPERIENCE_CHOICES = [
-        ('internship', 'Internship'),
-        ('research', 'Research'),
+        ('organization', 'Organization'),
+        ('committee', 'Committee'),
+        ('teaching-assistant', 'Teaching Assistant'),
         ('volunteer', 'Volunteer'),
-        ('part-time', 'Part-Time'),
-        ('full-time', 'Full-Time'),
-        ('freelance', 'Freelance'),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=255)
+    role = models.CharField(max_length=150, default='-')
+    organization = models.CharField(max_length=200, default='-')
     description = models.TextField()
-    category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
-    thumbnail = models.URLField(blank=True, null=True)
+    category = models.CharField(max_length=30, choices=EXPERIENCE_CHOICES, default='organization')
+
+    date_display = models.CharField(max_length=100, blank=True, null=True, help_text="Contoh: May 2026 - Present")
+    documentation_url = models.URLField(blank=True, null=True, help_text="Paste link foto di sini")
+
     started_at = models.DateTimeField(auto_now_add=True)
     ended_at = models.DateTimeField(blank=True, null=True)
+
     def __str__(self):
-        return self.title
+        return f"{self.role} - {self.organization}"
     
     @property
     def is_ongoing(self):

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience - {{ name }}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com"crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne@wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="experience-page">
+
+    <header class="site-header">
+        <div class="nav-bubble">
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
+            <nav>
+                <a href="{% url 'main:show_main' %}">Profile</a>
+                <a href="{% url 'main:show_experience' %}" class="active">Experience</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="experience-container">
+        <div class="vinyl-wrapper">
+            <div class="vinyl-record" id="vinylRecord">
+                <div class="vinyl-center-label">
+                    <span>{{ close_name }}</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="experience-section" id="experience">
+            <div class="experience-header">
+                <p class="section-kicker">My journey through time</p>
+                <h1>EXPERIENCE</h1>
+            </div>
+
+            <div class="experience-grid">
+                {% for experience in experience_list %}
+                    <article class="experience-card" onclick="toggleCard(this)">
+                        <div class="exp-card-header">
+                            <div>
+                                <span class="experience-category">{{ experience.get_category_display }}</span>
+                                <h2>{{ experience.title }}</h2>
+                            </div>
+                            <span class="expand-icon">+</span>
+                        </div>
+
+                        <div class="exp-card-body">
+                            <p class="experience-description">
+                                {{ experience.description }}
+                            </p>
+                            {% if experience.is_ongoing %}
+                                <span class="status-badge ongoing">Ongoing</span>
+                            {% else %}
+                                <span class="status-badge completed">Completed</span>
+                            {% endif %}
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="empty-state-box">
+                        <p class="empty-state">Nothing see here</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
