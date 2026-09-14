@@ -373,13 +373,15 @@ h1, h2, h3, .brand {
 
 /* Section Education */
 .education {
-    padding: 6rem 0;
+    padding-top: 12rem !important;
+    padding-bottom: 5rem;
     position: relative;
     z-index: 2;
 }
 
 .education-header {
-    margin-bottom: 2.5rem;
+    margin-top: 4rem !important; 
+    padding-top: 2rem !important;
 }
 
 .education-kicker {

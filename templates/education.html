@@ -47,7 +47,14 @@
 
                     <div class="edu-info">
                         <h3>{{ edu.institution }}</h3>
-                        <p class="edu-sub">{{ edu.degree }} &middot; {{ edu.start_year }} &ndash; {{ edu.end_year }}</p>
+                        <p class="edu-sub">
+                            {{ edu.degree }} &middot; {{ edu.start_year }} &ndash;
+                            {% if edu.is_ongoing %}
+                                Present
+                            {% else %}
+                                {{ edu.end_year|default:"Present" }}
+                            {% endif %}
+                        </p>
                     </div>
                     {% if edu.is_ongoing %}
                         <div class="edu-status-dot"></div>
