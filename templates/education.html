@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education - {{ name }}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus-Jakarta-Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="education-page">
+
+    <!-- NAVBAR -->
+    <header class="site-header">
+        <div class="nav-bubble">
+            <a href="{% url 'main:show_main' %}" class="brand">{{ close_name }}</a>
+            <nav>
+                <a href="{% url 'main:show_main' %}">PROFILE</a>
+                <a href="{% url 'main:show_experience' %}">EXPERIENCE</a>
+                <a href="{% url 'main:show_experience' %}" class="active">EDUCATION</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="education-container">
+
+        <!-- EDUCATION SECTION -->
+        <section class="education-section" id="education">
+            <div class="container">
+                <div class="education-header">
+                <p class="section-kicker">&starf; ACADEMIC BACKGROUND &starf;</p>
+                <h1><span class="text-gradient">My Education</span></h1>
+            </div>
+
+            <div class="education-details">
+                {% for edu in educations %}
+                <div class="education-card">
+                    <div class="edu-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                            <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                        </svg>
+                    </div>
+
+                    <div class="edu-info">
+                        <h3>{{ edu.institution }}</h3>
+                        <p class="edu-sub">{{ edu.degree }} &middot; {{ edu.start_year }} &ndash; {{ edu.end_year }}</p>
+                    </div>
+                    {% if edu.is_ongoing %}
+                        <div class="edu-status-dot"></div>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p>No education details has been added yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2026 {{ name }}. Fakultas Ilmu Komputer, Universitas Indonesia.</p>
+        </div>
+    </footer>
+</body>
+</html>

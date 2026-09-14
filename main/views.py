@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from main.models import Experience
-
+from main.models import Education
 
 def show_main(request):
     context = {
@@ -26,3 +26,13 @@ def show_experience(request):
         "experiences": experiences,
     }
     return render(request, "experience.html", context)
+
+def show_education(request):
+    educations = Education.objects.all()
+    
+    context = {
+        "name": "Nadin Putri Cahyani",
+        "close_name": "Nadin",
+        "experiences": educations,
+    }
+    return render(request, "education.html", context)

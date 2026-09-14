@@ -3,6 +3,9 @@ from django.db import models
 
 # Create your models here.
 class Experience(models.Model):
+    class Meta: 
+        ordering = ['-started_at']
+        
     EXPERIENCE_CHOICES = [
         ('organization', 'Organization'),
         ('committee', 'Committee'),
@@ -28,3 +31,16 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+class Education(models.Model):
+    institution = models.CharField(max_length=200)
+    degree = models.CharField(max_length=200)
+    start_year = models.IntegerField()
+    end_year = models.CharField(max_length=50, blank=True, null=True) # contoh: "2025" atau "Present"
+    is_ongoing = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-start_year']
+
+    def __str__(self):
+        return self.institution
