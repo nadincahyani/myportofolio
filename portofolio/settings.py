@@ -74,6 +74,10 @@ TEMPLATES = [
     },
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://nadin-putri-myportofolio.pws.cs.ui.ac.id",
+]
+
 WSGI_APPLICATION = 'portofolio.wsgi.application'
 
 
