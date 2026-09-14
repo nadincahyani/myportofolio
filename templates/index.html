@@ -29,8 +29,9 @@
         <div class="nav-bubble">
             <a href="{% url 'main:show_main' %}" class="brand">{{ close_name }}</a>
             <nav>
-                <a href="{% url 'main:show_main' %}" class="nav-pill active">Profile</a>
-                <a href="{% url 'main:show_experience' %}" class="nav-pill">Experience</a>
+                <a href="{% url 'main:show_main' %}" class="active">PROFILE</a>
+                <a href="{% url 'main:show_experience' %}">EXPERIENCE</a>
+                <a href="{% url 'main:show_education' %}">EDUCATION</a>
             </nav>
         </div>
     </header>
@@ -86,43 +87,6 @@
             </div>
         </section>
 
-        <section class="education" id="education">
-            <div class="container">
-                <div class="education-header">
-                    <p class="education-kicker">&starf; ACADEMIC BACKGROUND &starf;</p>
-                    <h2 class="education-title"><span class="text-gradient">My Education</span></h2>
-                </div>
-
-                <div class="education-details">
-                    <div class="education-card">
-                        <div class="edu-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                            </svg>
-                        </div>
-                        <div class="edu-info">
-                            <h3>Universitas Indonesia</h3>
-                            <p class="edu-sub">Bachelor of Information Systems &middot; 2025 &ndash; Present</p>
-                        </div>
-                        <div class="edu-status-dot"></div>
-                    </div>
-
-                    <div class="education-card">
-                        <div class="edu-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                                <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-                            </svg>
-                        </div>
-                        <div class="edu-info">
-                            <h3>SMAN 1 Cibinong</h3>
-                            <p class="edu-sub">Engineering Track &middot; 2023 &ndash; 2025</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer class="site-footer">

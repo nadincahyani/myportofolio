@@ -33,6 +33,6 @@ def show_education(request):
     context = {
         "name": "Nadin Putri Cahyani",
         "close_name": "Nadin",
-        "experiences": educations,
+        "educations": educations,
     }
     return render(request, "education.html", context)

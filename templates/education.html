@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +20,7 @@
             <nav>
                 <a href="{% url 'main:show_main' %}">PROFILE</a>
                 <a href="{% url 'main:show_experience' %}">EXPERIENCE</a>
-                <a href="{% url 'main:show_experience' %}" class="active">EDUCATION</a>
+                <a href="{% url 'main:show_education' %}" class="active">EDUCATION</a>
             </nav>
         </div>
     </header>
