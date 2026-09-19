@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.core import serializers
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required
 
 def show_main(request):
     context = {
@@ -25,7 +26,7 @@ def show_main(request):
 
 
 def show_experience(request):
-    experiences = Experience.objects.all().order_by('-id')
+    experiences = Experience.objects.all().order_by('-created_at')
 
     context = {
             "name": "Nadin Putri Cahyani",
@@ -33,7 +34,7 @@ def show_experience(request):
             "experiences": experiences,
         }
     
-    return render(request, 'experience.html', {'experiences': experiences})
+    return render(request, 'experience.html', context)
 
 def show_education(request):
     educations = Education.objects.all()
@@ -95,3 +96,10 @@ def get_projects_json(request):
 
     projects_json = serializers.serialize("json", projects)
     return HttpResponse(projects_json, content_type="application/json")
+
+@login_required(login_url='/login/') 
+def delete_project(request, id):
+    project = Project.objects.get(pk=id)
+    project.delete()
+    return redirect('main:show_project')
+
