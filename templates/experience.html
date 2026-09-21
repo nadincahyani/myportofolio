@@ -35,7 +35,7 @@
                             <div class="project-card-actions">
                                 <div class="project-actions">
                                     {% if exp.documentation_url %}
-                                        <a href="https://lh3.googleusercontent.com/d/FILE_ID" target="_blank" class="button">Behind The Work</a>
+                                        <a href="{{ exp.documentation_url }}" target="_blank" class="button">Behind The Work</a>
                                     {% endif %}
 
                                     <a href="{% url 'main:update_experience' exp.id %}" class="button button-secondary">Update</a>
