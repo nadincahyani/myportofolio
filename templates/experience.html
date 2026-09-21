@@ -13,10 +13,10 @@
                 <a href="{% url 'main:create_experience' %}" class="add-project-btn">Add Experience</a>
             </div>
 
-            <form method="get" actions="{% url 'main:show_experience' %}" class="project-search">
+            <form method="get" action="{% url 'main:show_experience' %}" class="project-search">
                 <input type="search"
-                        name="title"
-                        value="{{ title_query }}"
+                        name="role"
+                        value="{{ role_query }}"
                         placeholder="Cari berdasarkan nama peran atau organisasi..."
                         class="project-search__input"
                         aria-label="Cari berdasarkan peran atau organisasi">
