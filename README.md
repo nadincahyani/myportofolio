@@ -37,3 +37,49 @@ Langkah terakhir terjadi saat view menyerahkan data context tersebut ke file tem
 3. Perbedaan utama antara keduanya terletak pada tahap perancangan dan eksekusi. Perintah makemigrations bertugas untuk mendeteksi perubahan yang kita buat pada file models.py dan mencatatnya ke dalam bentuk berkas cetak biru (migration file) di folder migrations. Perintah ini baru sebatas menyiapkan draf rencana dan belum mengubah struktur database yang sebenarnya. Sementara itu, perintah migrate adalah langkah eksekusi yang akan membaca berkas cetak biru tersebut dan benar-benar menerapkannya ke dalam database nyata.
 
 Sebagai contoh, saat menambahkan atribut baru di model Experience, yaitu documentation_url = models.URLField(blank=True, null=True). Setelah menambahkan baris tersebut di models.py, kita wajib menjalankan python manage.py makemigrations terlebih dahulu agar Django membuatkan file instruksi migrasinya. Setelah itu, kita menjalankan python manage.py migrate supaya kolom documentation_url tersebut benar-benar dibuat sebagai kolom baru di tabel database kita.
+
+### Tugas 3
+## Deskripsi Proyek Tugas 3
+Pada Tugas 3 ini, saya melakukan refactoring pada berkas HTML dengan memanfaatkan skeleton template `base.html` sebagai berkas utama yang di-extend oleh halaman lainnya seperti `index.html`, `education.html`, `experience.html`, dan `projects.html`. Saya juga menerapkan form serta mekanisme penyajian data untuk bagian Experience dan Project, termasuk fitur tambah, update, hapus (dengan konfirmasi modal/popover), dan pencarian data. Selain itu, saya mengimplementasikan unit test untuk memastikan seluruh fitur data project dan education berjalan dengan baik. 
+
+## Pertanyaan Reflektif
+**1. Jelaskan mengapa kita menggunakan ModelForm pada Django alih-alih membuat form HTML secara manual. Selain itu, jelaskan pula mengapa kita diwajibkan menambahkan {% csrf_token %} pada form tersebut!**
+Karena jika membuat form HTML secara manual akan lebih sulit dan berisiko error. Harus membuat tag '<input>' satu per satu, mengatur validasi input di backend secara manual, dan mencocokkan tipe data input dengan kolom database.
+
+Dengan ModelForm Django, akan otomatis membuat elemen form HTML sesuai dengan struktur field/kolom di model database, menangani validasi data otomatis, dan menyimpan data langsung ke database dengan 'form.save()'
+
+'{% csrf_token %}' adalah fitur keamanan wajib di Django untuk mencegah serangan CSRF (Cross-Site Request Forgery). Serangan CSRF dapat terjadi ketika ada situs yang mencoba mengirimkan request (seperti 'POST') ke aplikasi kita atas nama pengguna yang sedang login tanpa sepengetahuan mereka. Tag '{% csrf_token %}' akan menghasilkan token unik yang divalidasi oleh Django. Jika request yang masuk tidak membawa token cocok ini, Django akan menolak untuk menjaga keamanan data.
+
+**2. Pada Tutorial 03, kita membahas format data JSON dan XML. Mengapa JSON lebih disukai dalam pengembangan aplikasi web modern dibandingkan XML?**
+Meskipun XML dan JSON sama-sama digunakan untuk pertukaran data, JSON menjadi standar utama diaplikasi web modern karena beberapa alasan, seperti:
+1. Ukuran data lebih ringan, karena XML menggunakan tag pembuka dan penutup, sedangkan JSON hanya memakai pasangan key-value. Hal ini membuat ukuran berkas JSON jauh lebih kecil sehingga hemat bandwith dan cepat ditransfer melalui jaringan.
+2. Mudah di-parse oleh JavaScript, JSON secara alami berstruktur objek JavaScript. Browser bisa langsung membaca data JSON menjadi objek tanpa butuh library parser tambahan yang berat seperti pada XML.
+3. Lebih Readable, karena struktur JSON jauh lebih bersih, ringkas, dan tidak perlu banyak tag-tag markup seperti XML.
+
+**3. Jelaskan alur yang terjadi saat kamu menggunakan fungsi view untuk mengembalikan data portofoliomu dalam bentuk JSON. Mengapa kita perlu melakukan proses serialization pada model Django sebelum datanya dikembalikan?**
+Alur pengembalian data portofolio pada JSON, yaitu:
+1. Request dari client, browser atau aplikasi frontend mengirimkan HTTP Request ke URL endpoint data (misalnya '/api/project/' atau '/api/experience/').
+2. URL routing ('urls.py'), Django akan mengarahkan request tersebut ke fungsi view yang sesuai.
+3. Query database ('views.py'), fungsi view akan mengambil data dari database menggunakan ORM Django (misalnya 'Experience.object.all()').
+4. Serialization, data objek python/Django QuerySet dikonversi menjadi format string JSON menggunakan serializer ('serializers.serialize("json", data)').
+5. Response ('HttpResponse'), fungsi view akan mengemas string JSON tersebut ke dalam 'HttpResponse' dengan 'content_type="application/json"' lalu mengirimkannya kembali ke browser/client.
+
+Serialization perlu dilakukan karena Model/QuerySet Django adalah objek python kompleks yang tersimpan di dalam memori server. Objek ini tidak bisa langsung dikirim begitu saja melalui protokol HTTP ke browser, karena HTTP hanya dapat mentransfer teks/byte mentah. Proses serialization bertugas menerjemahkan/mengubah objek python kompleks tersebut menjadi format teks terstruktur standar (seperti JSON) yang dapat dimengerti dan dibaca oleh bahasa pemrograman apapun di sisi frontend (JavaScript, React, Flutter, dll).
+
+## AI Disclosure 
+- Tool yang Digunakan: Google Gemini
+- Tautan Log / Sesi percakapan: [Sesi Percakapan Gemini]
+(https://share.gemini.google/bj8yR4oGSo57) 
+- Strategi Prompting: 
+Saya menggunakan pendekatan interaktif berorientasi masalah dengan membagikan potongan kode, skenario kebutuhan alur aplikasi, serta screenshot pesan error Django secara langsung. Strategi ini saya gunakan untuk mendiagnosis kendala teknis (seperti kesalahan format link Google Drive, penanganan error pada Django routing, hingga pembuatan efek visual CSS) secara bertahap tanpa harus merombak struktur utama proyek yang sedang dikembangkan.
+
+- Bagian yang Dibantu AI:
+1. Membantu memformulasikan perubahan struktur URL Google Drive dari halaman pratinjau (/file/d/FILE_ID/view) menjadi direct link ([https://lh3.googleusercontent.com/d/FILE_ID](https://lh3.googleusercontent.com/d/FILE_ID)) agar berkas gambar dapat langsung ditampilkan menggunakan tag <img> maupun dibuka utuh saat tombol diklik.
+2. Memberikan panduan implementasi efek kaca buram pada tombol menggunakan kombinasi background transparan (RGBA), backdrop-filter: blur(), serta border semi-transparan.
+3. Membantu membedah akar penyebab TypeError: delete_project() got an unexpected keyword argument 'project_id' akibat ketidakcocokan variabel antara urls.py dan views.py, serta menyelesaikan NoReverseMatch dengan mengarahkan redirect menggunakan namespacing aplikasi ('main:show_project').
+4. Menjelaskan alur kerja pengubahan (update) data menggunakan ModelForm dengan parameter instance=project agar data lama otomatis terisi (pre-filled) pada form tanpa perlu membuat berkas HTML baru.
+
+- Keterbatasan AI & Perbaikan Mandiri:
+1. AI sempat memberikan atribut CSS glassmorphism, namun efeknya tidak terlihat saat diuji. Saya menyadari dan mengoreksinya secara mandiri dengan menambahkan warna/gradasi pada background utama halaman web agar efek pantulan kaca dan buramnya muncul.
+2. AI memberikan contoh template dasar menggunakan value="{{ project.title }}", tetapi saya menyesuaikannya secara mandiri dengan struktur rendering form Django ({{ form.as_p }} / looping field) yang sudah saya buat di berkas HTML proyek.
+3. Saat AI menyarankan beberapa opsi penamaan parameter pada views.py dan urls.py, saya memeriksa dan menyelaraskan seluruh nama rute URL secara mandiri di berkas urls.py agar tetap konsisten dengan konvensi penamaan proyek saya.
