@@ -80,6 +80,7 @@ Saya menggunakan pendekatan interaktif berorientasi masalah dengan membagikan po
 4. Menjelaskan alur kerja pengubahan (update) data menggunakan ModelForm dengan parameter instance=project agar data lama otomatis terisi (pre-filled) pada form tanpa perlu membuat berkas HTML baru.
 
 - Keterbatasan AI & Perbaikan Mandiri:
-1. AI sempat memberikan atribut CSS glassmorphism, namun efeknya tidak terlihat saat diuji. Saya menyadari dan mengoreksinya secara mandiri dengan menambahkan warna/gradasi pada background utama halaman web agar efek pantulan kaca dan buramnya muncul.
-2. AI memberikan contoh template dasar menggunakan value="{{ project.title }}", tetapi saya menyesuaikannya secara mandiri dengan struktur rendering form Django ({{ form.as_p }} / looping field) yang sudah saya buat di berkas HTML proyek.
-3. Saat AI menyarankan beberapa opsi penamaan parameter pada views.py dan urls.py, saya memeriksa dan menyelaraskan seluruh nama rute URL secara mandiri di berkas urls.py agar tetap konsisten dengan konvensi penamaan proyek saya.
+1. AI sempat menyarankan pengubahan link Google Drive menjadi direct image link ([https://lh3.googleusercontent.com/d/FILE_ID](https://lh3.googleusercontent.com/d/FILE_ID)). Namun, setelah dipertimbangkan, saya memilih untuk tetap menggunakan URL tautan pratinjau Google Drive standar agar berkas dapat diakses langsung oleh pengguna sesuai kebutuhan awal.
+2. AI sempat memberikan atribut CSS glassmorphism, namun efeknya tidak terlihat saat diuji. Saya menyadari dan mengoreksinya secara mandiri dengan menambahkan warna/gradasi pada background utama halaman web agar efek pantulan kaca dan buramnya muncul.
+3. AI memberikan contoh template dasar menggunakan value="{{ project.title }}", tetapi saya menyesuaikannya secara mandiri dengan struktur rendering form Django ({{ form.as_p }} / looping field) yang sudah saya buat di berkas HTML proyek.
+4. Saat AI menyarankan beberapa opsi penamaan parameter pada views.py dan urls.py, saya memeriksa dan menyelaraskan seluruh nama rute URL secara mandiri di berkas urls.py agar tetap konsisten dengan konvensi penamaan proyek saya.
