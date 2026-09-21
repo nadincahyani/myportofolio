@@ -23,13 +23,10 @@ class Experience(models.Model):
     started_at = models.DateTimeField(auto_now_add=True)
     ended_at = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
+    is_ongoing = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.role} - {self.organization}"
-    
-    @property
-    def is_ongoing(self):
-        return self.ended_at is None
 
 class Education(models.Model):
     institution = models.CharField(max_length=200)

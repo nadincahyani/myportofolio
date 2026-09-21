@@ -1,149 +1,60 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% block meta %}
+    <title>Experience - {{ close_name }}</title>
+{% endblock meta %}
+
 {% block content %}
-{% load static %}
-
-<main class="experience-container">
-    <!-- VINYL DISC -->
-    <div class="vinyl-wrapper">
-        <div class="vinyl-disc-container" id="vinylDisc">
-            <img src="{% static 'img/vinyl.png' %}" alt="Vinyl Record" class="vinyl-img" onerror="this.style.display='none'; document.getElementById('vinylFallback').style.display='block';">
-            <div id="vinylFallback" class="vinyl-svg-fallback" style="display:none;">
-                <svg viewBox="0 0 500 500" width="100%" height="100%">
-                    <circle cx="250" cy="250" r="240" fill="#111" stroke="#222" stroke-width="8"/>
-                    <circle cx="250" cy="250" r="210" fill="none" stroke="#1a1a1a" stroke-width="12"/>
-                    <circle cx="250" cy="250" r="170" fill="none" stroke="#1a1a1a" stroke-width="16"/>
-                    <circle cx="250" cy="250" r="130" fill="none" stroke="#1a1a1a" stroke-width="10"/>
-                    <circle cx="250" cy="250" r="80" fill="#FF3C5A"/>
-                    <circle cx="250" cy="250" r="18" fill="#0d0608"/>
-                </svg>
-            </div>
-        </div>
-    </div>
-
-    <!-- EXPERIENCE SECTION -->
-    <section class="experience-section" id="experience">
-        <div class="experience-header">
+<main class="project-page">
+    <section class="project-section" id="projects">
+        <div class="project-container">
             <p class="section-kicker">&starf; EXPERIENCE &starf;</p>
-            <h1><span class="text-gradient">My Journey Through Time</span></h1>
-        </div>
+            <div class="project-header">
+                <h1><span class="text-gradient">My Journey Through Time</span></h1>
+                <a href="{% url 'main:create_experience' %}" class="add-project-btn">Add Experience</a>
+            </div>
 
-        <div class="experience-grid">
-            {% for exp in experiences %}
-                
-            <article class="experience-card {% if forloop.first %}active-card{%endif %}">
-                <div class="exp-card-topbar">
-                    <span class="experience-category pill-category">{{ exp.get_category_display }}</span>
-                    {% if exp.date_display %}
-                        <span class="exp-date">{{ exp.date_display }}</span>
-                    {% endif %}
-                </div>
-                    
-                <div class="exp-card-header">
-                    <h2 class="exp-role">{{ exp.role }}</h2>
-                    <p class="exp-organization">{{ exp.organization }}</p>
-                </div>
+            <form method="get" actions="{% url 'main:show_experience' %}" class="project-search">
+                <input type="search"
+                        name="title"
+                        value="{{ title_query }}"
+                        placeholder="Cari berdasarkan nama peran atau organisasi..."
+                        class="project-search__input"
+                        aria-label="Cari berdasarkan peran atau organisasi">
+                <button type="submit" class="button">Search</button>
+            </form>
 
-                <div class="exp-card-body">
-                    <div class="exp-divider"></div>
-                    <p class="experience-description">{{ exp.description }}</p>
+            <div class="project-grid">
+                {% for exp in experiences %}
+                    <article class="project-card">
+                        <div class="project-card-body">
+                            <span class="project-tech-stack">{{ exp.get_category_display }}{% if exp.date_display %}&bull; {{ exp.date_display }}{% endif %}</span>
+                            <h2 class="project-title">{{ exp.role }}</h2>
+                            <p class="project-tech-stack" style="color: var(--text-muted, #aaa); margin-top: -4px;">{{ exp.organization }}</p>
+                            <p class="project-description">{{ exp.description }}</p>
 
-                    <!-- STATUS -->
-                    <div class="exp-card-footer">
-                        {% if exp.is_ongoing %}
-                            <span class="experience-status status-ongoing">Ongoing</span>
+                            <div class="project-card-actions">
+                                <div class="project-actions">
+                                    {% if exp.documentation_url %}
+                                        <a href="https://lh3.googleusercontent.com/d/FILE_ID" target="_blank" class="button">Behind The Work</a>
+                                    {% endif %}
+
+                                    <a href="{% url 'main:update_experience' exp.id %}" class="button button-secondary">Update</a>
+                                    {% include "components/experience_delete_modal.html" with exp=exp %}
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                {% empty %}
+                    <div class="empty-state-card">
+                        {% if role_query %}
+                            <p class="empty-state">Tidak ada pengalaman dengan kata kunci tersebut.</p>
                         {% else %}
-                            <span class="experience-status status-completed">Completed</span>
-                        {% endif %}
-
-                        {% if exp.documentation_url %}
-                            <a href="{{ exp.documentation_url }}" target="_blank" class="btn-documentation">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                                    <polyline points="21 15 16 10 5 21"/>
-                                </svg>
-                                 Behind the Work
-                            </a>
+                            <p class="empty-state">Belum ada pengalaman yang ditambahkan.</p>
                         {% endif %}
                     </div>
-                </div>
-            </article> 
-            {% empty %}
-            <div class="empty-state-card">
-                <p class="empty-state">No experience has been added yet.</p>
-            </div>
                 {% endfor %}
+            </div>
         </div>
     </section>
 </main>
-
-<!-- VINYL MUTER -->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const vinylDisc = document.getElementById('vinylDisc');
-        const cards = document.querySelectorAll('.experience-card');
-        let currentRotation = 0;
-        let autoRotateSpeed = 0.15;
-        let isDragging = false;
-        let startY = 0;
-
-        function animateVinyl() {
-            if (!isDragging) {
-                currentRotation += autoRotateSpeed;
-                vinylDisc.style.transform = `rotate(${currentRotation}deg)`;
-            }
-            requestAnimationFrame(animateVinyl);
-        }
-        animateVinyl();
-
-        function addRotation(deg) {
-            currentRotation += deg;
-            vinylDisc.style.transform = `rotate(${currentRotation}deg)`;
-
-            if (cards.length > 0) {
-                const activeIndex = Math.abs(Math.floor(currentRotation / 45)) % cards.length;
-                    
-                cards.forEach((card, idx) => {
-                    if (idx === activeIndex) {
-                        card.classList.add('active-card');
-                    } else {
-                        card.classList.remove('active-card');
-                    }
-                });
-            }
-        }
-
-        window.addEventListener('wheel', (e) => {
-            addRotation(e.deltaY * 0.25);
-        });
-
-        vinylDisc.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startY = e.clientY;
-            vinylDisc.style.cursor = 'grabbing';
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-            const deltaY = e.clientY - startY;
-            addRotation(deltaY * 0.6);
-            startY = e.clientY;
-        });
-
-        window.addEventListener('mouseup', () => {
-            isDragging = false;
-            vinylDisc.style.cursor = 'grab';
-        });
-
-        cards.forEach((card, idx) => {
-            card.addEventListener('click', () => {
-                cards.forEach(c => c.classList.remove('active-card'));
-                card.classList.add('active-card');
-                    
-                currentRotation = idx * 45;
-                vinylDisc.style.transform = `rotate(${currentRotation}deg)`;
-            });
-        });
-    });
-</script>
 {% endblock content %}
