@@ -84,3 +84,24 @@ Saya menggunakan pendekatan interaktif berorientasi masalah dengan membagikan po
 2. AI sempat memberikan atribut CSS glassmorphism, namun efeknya tidak terlihat saat diuji. Saya menyadari dan mengoreksinya secara mandiri dengan menambahkan warna/gradasi pada background utama halaman web agar efek pantulan kaca dan buramnya muncul.
 3. AI memberikan contoh template dasar menggunakan value="{{ project.title }}", tetapi saya menyesuaikannya secara mandiri dengan struktur rendering form Django ({{ form.as_p }} / looping field) yang sudah saya buat di berkas HTML proyek.
 4. Saat AI menyarankan beberapa opsi penamaan parameter pada views.py dan urls.py, saya memeriksa dan menyelaraskan seluruh nama rute URL secara mandiri di berkas urls.py agar tetap konsisten dengan konvensi penamaan proyek saya.
+
+### Tugas 4
+## Deskripsi Proyek Tugas 4
+Pada Tugas 4 ini, saya mengimplementasikan sistem autentikasi dan otorisasi berbasis Role-Based Access Control (RBAC) menggunakan framework bawaan Django untuk mengamankan data dan fitur pada portofolio. 
+
+## AI Disclosure
+- Tool yang Digunakan: Google Gemini
+- Tautan Log / Sesi percakapan: [Sesi Percakapan Gemini]
+(https://share.gemini.google/OFeSW03GRxAD) 
+- Strategi Prompting: 
+Saya menggunakan pendekatan berbasis masalah secara bertahap. Dibandingkan meminta AI membuatkan kode dari nol, saya lebih banyak membagikan potongan kode yang sedang saya kerjakan, menggunggah tangkapan layar pesan error Django yang muncul, dan mengonfirmasi pemahaman konsep tertentu. Strategi ini membantu saya menemukan letak kesalahan teknis tanpa harus merusak struktur kode atau desain kustom yang sudah saya rancang sendiri. 
+
+- Bagian yang Dibantu AI:
+1. Membantu menjelaskan bahwa untuk autentikasi tidak perlu membuat kelas model User baru di models.py melainkan menggunakan django.contrib.auth.models.User serta cara menghubungkannya ke model lain menggunakan ForeignKey. 
+2. Membantu melacak penyebab error yang disebabkan oleh typo penulisan kode.
+3. Memberikan gambaran alur kerja end-to-end untuk fitur AJAX/Fetch pada Django, mulai dari logika JsonResponse, pendaftaran url, hingga pemrosesan data starred_by pada keluaran API JSON.
+
+- Keterbatasan AI & Perbaikan Mandiri:
+1. AI sempat memberikan contoh kode HTML standar untuk tombol login dan navbar. Namun, saya memilih untuk tidak langsung copy, melainkan menyelaraskan perbaikan sintaks yang diberikan ke dalam kode HTML yang sudah saya buat. 
+2. Ketika terjadi error NoReverseMatch with arguments, AI awalnya hanya berfokus pada perbaikan baris tag {% url %} di HTML. Saya menyadari dan mengecek secara mandiri bahwa masalah utamanya juga bersumber dari nama atribut primary key pada model serta memastikan looping membungkus elemen tersebut dengan benar. 
+3. AI tidak dapat memantau network request atau console di Developer Tools browser saya secara langsung. Saya melakukan inspeksi mandiri pada tab Console browser saat tombol star diklik untuk memverifikasi apakah status respon dari server bernilai 200, 404 Not Found, atau 403 Forbidden. 

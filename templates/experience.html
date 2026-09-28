@@ -10,7 +10,11 @@
             <p class="section-kicker">&starf; EXPERIENCE &starf;</p>
             <div class="project-header">
                 <h1><span class="text-gradient">My Journey Through Time</span></h1>
-                <a href="{% url 'main:create_experience' %}" class="add-project-btn">Add Experience</a>
+
+                <!-- Superuser bisa menambahkan experience -->
+                {% if user.is_authenticated and user.is_superuser %}
+                    <a href="{% url 'main:create_experience' %}" class="add-project-btn">Add Experience</a>
+                {% endif %}
             </div>
 
             <form method="get" action="{% url 'main:show_experience' %}" class="project-search">
@@ -38,12 +42,25 @@
                                         <a href="{{ exp.documentation_url }}" target="_blank" class="button">Behind The Work</a>
                                     {% endif %}
 
-                                    <a href="{% url 'main:update_experience' exp.id %}" class="button button-secondary">Update</a>
-                                    {% include "components/experience_delete_modal.html" with exp=exp %}
+                                    <!-- Editor dan Superuser bisa mengupdate experience -->
+                                    {% if is_editor %}
+                                        <a href="{% url 'main:update_experience' exp.id %}" class="button button-secondary">Update</a>
+                                    {% endif %}
+
+                                    <!-- User terautentikasi (Biasa, Editor, dan Superuser) bisa memberi star -->
+                                    {% if user.is_authenticated %}
+                                        {% include "components/experience_star.html" with exp=exp %}
+                                    {% endif %}
+
+                                    <!-- Superuser bisa delete experience -->
+                                    {% if user.is_authenticated %}
+                                        {% include "components/experience_delete_modal.html" with exp=exp %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </article>
+                <!-- Empty State -->
                 {% empty %}
                     <div class="empty-state-card">
                         {% if role_query %}

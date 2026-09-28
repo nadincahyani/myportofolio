@@ -12,7 +12,12 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST, require_GET
 from django.core.exceptions import PermissionDenied
+
+# Helper untuk Role Checking Editor atau Superuser
+def is_editor_or_admin(user):
+    return user.is_superuser or user.groups.filter(name='Editor').exists()
 
 # Profile views
 def show_main(request):
@@ -50,7 +55,11 @@ def show_experience(request):
     return render(request, "experience.html", context)
 
 # bagian menambah experience dengan form
+@login_required(login_url="/login/")
 def create_experience(request):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     form = ExperienceForm(request.POST or None)
 
     if request.method == "POST" and form.is_valid():
@@ -66,7 +75,11 @@ def create_experience(request):
     return render(request, "experience_form.html", context)
 
 # bagian mengupdate experience dengan form
+@login_required(login_url="/login/")
 def update_experience(request, id):
+    if not is_editor_or_admin(request.user):
+        raise PermissionDenied
+    
     experience = get_object_or_404(Experience, pk=id)
     form = ExperienceForm(request.POST or None, instance=experience)
 
@@ -85,7 +98,11 @@ def update_experience(request, id):
     return render(request, "experience_form.html", context)
 
 # bagian menghapus experience
+@login_required(login_url="/login/")
 def delete_experience(request, id):
+    if not request.user.is_superuser:
+        raise PermissionDenied
+    
     experience = get_object_or_404(Experience, pk=id)
 
     if request.method == "POST":
@@ -93,7 +110,22 @@ def delete_experience(request, id):
         messages.success(request, "Pengalaman berhasil dihapus!")
     return redirect("main:show_experience")
 
+@login_required(login_url="/login/")
+@require_POST
+def toggle_star_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+
+    if request.user in experience.starred_by.all():
+        experience.starred_by.remove(request.user)
+        messages.info(request, f"Bintang untuk {experience.role} dibatalkan.")
+    else:
+        experience.starred_by.add(request.user)
+        messages.success(request, f"Berhasil memberikan bintang pada {experience.role}!")
+
+    return redirect("main:show_experience")
+
 # Mengambil data dalam format JSON
+@require_GET
 def get_experience_json(request):
     role_query = request.GET.get("role", "").strip()
     experiences = Experience.objects.all()
@@ -103,12 +135,14 @@ def get_experience_json(request):
             Q(role__icontains=role_query) | Q(organization__icontains=role_query)
         )
 
-    experiences_json = serializers.serialize("json", experiences)
+    experiences_json = serializers.serialize("json", experiences, use_natural_foreign_keys=True)
     return HttpResponse(experiences_json, content_type="application/json")
 
+@require_GET
 def get_experience_json_by_id(request, id):
-    experience = Experience.objects.filter(pk=id)
-    return HttpResponse(serializers.serialize("json", experience), content_type="application/json")
+    experience = get_object_or_404(Experience, pk=id)
+    data = serializers.serialize("json", [experience], use_natural_foreign_keys=True)
+    return HttpResponse(data, content_type="application/json")
 
 # Education views
 def show_education(request):
@@ -135,6 +169,7 @@ def show_projects(request):
         "close_name": "Nadin",
         "project_list": projects,
         "title_query": title_query,
+        "is_editor": is_editor_or_admin(request.user)
     }
     return render(request, "project.html", context)
 
@@ -159,7 +194,11 @@ def create_project(request):
     return render(request, "projects_form.html", context)
 
 # bagian mengupdate project dengan form
+@login_required(login_url="/login/")
 def update_project(request, id):
+    if not is_editor_or_admin(request.user):
+        raise PermissionDenied
+    
     project = get_object_or_404(Project, pk=id)
     form = ProjectForm(request.POST or None, instance=project)
 
@@ -192,7 +231,23 @@ def delete_project(request, id):
 
     return redirect("main:show_projects")
 
+# Fungsi toggle star untuk project
+@login_required(login_url="/login/")
+@require_POST
+def toggle_star_project(request, id):
+    project = get_object_or_404(Project, pk=id)
+
+    if request.user in project.starred_by.all():
+        project.starred_by.remove(request.user)
+        messages.info(request, f"Bintang untuk {project.title} dibatalkan.")
+    else:
+        project.starred_by.add(request.user)
+        messages.success(request, f"Berhasil memberikan bintang pada {project.title}!")
+
+    return redirect("main:show_projects")
+
 # Mengambil data dalam format JSON 
+@require_GET
 def get_projects_json(request):
     title_query = request.GET.get("title", "").strip()
     projects = Project.objects.all()
@@ -203,9 +258,11 @@ def get_projects_json(request):
     projects_json = serializers.serialize("json", projects, use_natural_foreign_keys=True)
     return HttpResponse(projects_json, content_type="application/json")
 
+@require_GET
 def get_projects_json_by_id(request, id):
-    project = Project.objects.filter(pk=id)
-    return HttpResponse(serializers.serialize("json", project), content_type="application/json")
+    project = get_object_or_404(Project, pk=id)
+    data = serializers.serialize("json", [project], use_natural_foreign_keys=True)
+    return HttpResponse(data, content_type="application/json")
 
 # Fungsi Register
 def register(request):

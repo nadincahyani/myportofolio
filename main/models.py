@@ -26,6 +26,8 @@ class Experience(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     is_ongoing = models.BooleanField(default=True)
 
+    starred_by = models.ManyToManyField(User, related_name="starred_experiences", blank=True)
+
     def __str__(self):
         return f"{self.role} - {self.organization}"
 

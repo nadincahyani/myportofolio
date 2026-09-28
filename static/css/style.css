@@ -768,6 +768,12 @@ h1, h2, h3, .brand {
     display: none !important;
 }
 
+.project-actions form,
+.star-form {
+    display: inline-flex;
+    margin: 0;
+}
+
 /* Modal Delete */
 .project-delete-modal {
     display: none;
@@ -861,6 +867,37 @@ h1, h2, h3, .brand {
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.25);
     font-size: 0.8rem;
+}
+
+.star-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.star-tooltip {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(20, 20, 20, 0.95);
+    color: #FFFFFF;
+    text-align: center;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.star-wrapper:hover .star-tooltip {
+    visibility: visible;
+    opacity: 1;
 }
 
 /* Footer & Responsive */

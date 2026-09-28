@@ -10,7 +10,8 @@
                 <p class="section-kicker">&starf; PROJECTS &starf;</p>
                 <div class="project-header">
                     <h1><span class="text-gradient">Featured Projects</span></h1>
-                    {% if user.is_superuser %}
+
+                    {% if user.is_authenticated and user.is_superuser %}
                         <a href="{% url 'main:create_project' %}" class="add-project-btn">Add Project</a>
                     {% endif %}
                 </div>
@@ -45,10 +46,15 @@
                                             <a href="{{ project.project_url }}" target="_blank" class="button">Lihat Project</a>
                                         {% endif %}
 
-                                        <a href="{% url 'main:update_project' project.id %}" class="button button-secondary">Update</a>
+                                        {% if is_editor %}
+                                            <a href="{% url 'main:update_project' project.id %}" class="button button-secondary">Update</a>
+                                        {% endif %}
                                         
-                                        {% if user.is_superuser %}
+                                        {% if user.is_authenticated %}
                                             {% include "components/project_star.html" with project=project %}
+                                        {% endif %}
+
+                                        {% if user.is_authenticated and user.is_superuser %}
                                             {% include "components/project_delete_modal.html" with project=project %}
                                         {% endif %}
                                     </div>
