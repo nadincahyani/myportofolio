@@ -78,6 +78,7 @@
         const searchForm = document.getElementById('project-search-form');
         const searchInput = document.getElementById('search-input');
         const projectForm = document.getElementById('project-form');
+
         const SEARCH_DEBOUNCE_DELAY = 300;
         let searchDebounceTimer;
 
@@ -121,6 +122,7 @@
 
             const articleElement = document.createElement('article');
             articleElement.className = 'project-card';
+            articleElement.dataset.id = projectId;
 
             const imageHtml = project.project_image_url
                 ? `<div class="project-image-wrapper">
@@ -190,6 +192,29 @@
         }
 
     // Fetch data project
+    async function handleStarToggle(button) {
+        const url = button.dataset.url;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                searchProjects(); // Refresh data tanpa reload halaman
+            } else {
+                if (typeof showToast === 'function') {
+                    showToast('Gagal', 'Tidak dapat memperbarui status star.', 'error');
+                }
+            }
+        } catch (err) {
+            console.error('Error toggling star:', err);
+        }
+    }
+
     async function fetchProjects(searchQuery = "") {
         if (projectsAbortController) projectsAbortController.abort();
         projectsAbortController = new AbortController();
@@ -227,13 +252,27 @@
 
     // Event Handlers untuk Form Search
     function searchProjects() {
-        fetchProjects(searchInput.value.trim());
+        if (searchInput) {
+            fetchProjects(searchInput.value.trim());
+        }
+    }
+
+    if (gridContainer) {
+        gridContainer.addEventListener('click', function(e) {
+            const starBtn = e.target.closest('.js-star-btn');
+            if (starBtn) {
+                e.preventDefault();
+                handleStarToggle(starBtn);
+            }
+        });
     }
 
     if (searchInput) {
         searchInput.addEventListener("input", function() {
             clearTimeout(searchDebounceTimer);
-            searchDebounceTimer = setTimeout(searchProjects, SEARCH_DEBOUNCE_DELAY);
+            searchDebounceTimer = setTimeout(function() {
+                searchProjects();
+            }, SEARCH_DEBOUNCE_DELAY);
         });
     }
 
@@ -248,8 +287,7 @@
     if (projectForm) {
         projectForm.addEventListener("submit", async function(e) {
             e.preventDefault(); // Mencegah reload halaman
-            const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}"; // Sesuaikan nama URL view AJAX-mu
-            
+            const CREATE_PROJECT_ENDPOINT = "{% url 'main:create_project_ajax' %}"; 
             const formData = new FormData(projectForm);
 
             try {
@@ -262,17 +300,17 @@
                 });
 
                 if (response.ok) {
-                    // Tutup modal jika ada fungsinya (misal: closeModal())
-                    if (typeof closeModal === 'function') closeModal();
-                    
+                    const modal = document.getElementById('add-project-modal');
+                    if (modal && typeof modal.hidePopover === 'function') {
+                        modal.hidePopover();
+                    }
+                        
                     projectForm.reset();
                     
-                    // Panggil Toast Notifikasi
                     if (typeof showToast === 'function') {
                         showToast('Sukses', 'Project berhasil ditambahkan!', 'success');
                     }
                     
-                    // Re-fetch data terbaru
                     fetchProjects(searchInput.value.trim());
                 } else {
                     const errorData = await response.json();

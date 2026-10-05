@@ -113,3 +113,18 @@ class ExperienceForm(ModelForm):
                 }
             ),
         }
+
+    def clean_role(self):
+        role = strip_tags(self.cleaned_data.get("role", "")).strip()
+        if not role:
+            raise ValidationError("Nama peran/jabatan tidak boleh hanya berisi tag HTML.")
+        return role
+
+    def clean_organization(self):
+        org = strip_tags(self.cleaned_data.get("organization", "")).strip()
+        if not org:
+            raise ValidationError("Nama organisasi tidak boleh hanya berisi tag HTML.")
+        return org
+
+    def clean_description(self):
+        return strip_tags(self.cleaned_data.get("description", "")).strip()

@@ -37,21 +37,14 @@ def show_main(request):
 # Experience views
 def show_experience(request):
     role_query = request.GET.get("role", "").strip()
-    experiences = Experience.objects.all().order_by('-created_at')
-
-    # Filter berdasarkan role atau organisasi
-    if role_query:
-        experiences = experiences.filter(
-            Q(role__icontains=role_query) | Q(organization__icontains=role_query)
-        )
     
     context = {
         "name": "Nadin Putri Cahyani",
         "close_name": "Nadin",
-        "experiences": experiences,
-        "role_query": role_query
+        "role_query": role_query,
+        "form": ExperienceForm(),
+        "is_editor": is_editor_or_admin(request.user)
     }
-    
     return render(request, "experience.html", context)
 
 # bagian menambah experience dengan form
@@ -73,6 +66,19 @@ def create_experience(request):
         "form": form,
     }
     return render(request, "experience_form.html", context)
+
+# Menambahkan data experience dengan AJAX
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse({"message": "Hanya pemilik portofolio yang dapat menambahkan pengalaman." }, status=403)
+
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse({"message": "Pengalaman berhasil ditambahkan.", "pk": str(experience.id)}, status=201)
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 # bagian mengupdate experience dengan form
 @login_required(login_url="/login/")
@@ -128,15 +134,34 @@ def toggle_star_experience(request, id):
 @require_GET
 def get_experience_json(request):
     role_query = request.GET.get("role", "").strip()
-    experiences = Experience.objects.all()
+    experiences = Experience.objects.prefetch_related('starred_by').all().order_by('-created_at')
 
     if role_query:
         experiences = experiences.filter(
             Q(role__icontains=role_query) | Q(organization__icontains=role_query)
         )
 
-    experiences_json = serializers.serialize("json", experiences, use_natural_foreign_keys=True)
-    return HttpResponse(experiences_json, content_type="application/json")
+    data = []
+    for exp in experiences:
+        starred_users = exp.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        data.append({
+            "pk": str(exp.id),
+            "fields": {
+                "role": exp.role,
+                "organization": exp.organization,
+                "description": exp.description,
+                "category": exp.category,
+                "is_ongoing": exp.is_ongoing,
+                "documentation_url": exp.documentation_url,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+    return JsonResponse(data, safe=False)
 
 @require_GET
 def get_experience_json_by_id(request, id):
