@@ -32,11 +32,11 @@ Setelah rute ditemukan, view mengambil alih peran sebagai pengolah logika. Jika 
 
 Langkah terakhir terjadi saat view menyerahkan data context tersebut ke file template HTML (seperti experience.html). Di dalam template, data diolah menggunakan Django Template Language (DTL) agar bisa ditampilkan secara dinamis melalui perulangan. Django kemudian memproses seluruh kode tersebut menjadi file HTML murni dan mengirimkannya kembali ke browser pengguna untuk ditampilkan secara visual.
 
-2. Menyimpan data di dalam model dan memisahkannya dari template HTML adalah praktik yang sangat penting untuk kemudahan pemeliharaan aplikasi. Jika data ditulis langsung (hard-coded) di file template, setiap kali ada perubahan atau penambahan pengalaman baru, kita harus membuka dan mengedit kode HTML secara manual. Hal ini tidak efisien dan berisiko merusak struktur tampilan halaman jika terjadi kesalahan ketik pada tag HTML. Dengan menggunakan model, struktur tampilan HTML hanya perlu dibuat satu kali menggunakan looping. Data dapat ditambah, diubah, atau dihapus langsung melalui database atau panel admin tanpa perlu menyentuh kode aplikasi sama sekali. Pemisahan ini membuat kode aplikasi menjadi jauh lebih bersih, rapi, dan mudah dikembangkan di masa mendatang, misalnya jika data portofolio tersebut ingin difilter, dicari, atau digunakan kembali untuk fitur lain.
+2. Menyimpan data di dalam model dan memisahkannya dari template HTML adalah praktik yang sangat penting untuk kemudahan pemeliharaan aplikasi. Jika data ditulis langsung (hard-coded) di file template, setiap kali ada perubahan atau penambahan pengalaman baru, harus membuka dan mengedit kode HTML secara manual. Hal ini tidak efisien dan berisiko merusak struktur tampilan halaman jika terjadi kesalahan ketik pada tag HTML. Dengan menggunakan model, struktur tampilan HTML hanya perlu dibuat satu kali menggunakan looping. Data dapat ditambah, diubah, atau dihapus langsung melalui database atau panel admin tanpa perlu menyentuh kode aplikasi sama sekali. Pemisahan ini membuat kode aplikasi menjadi jauh lebih bersih, rapi, dan mudah dikembangkan di masa mendatang, misalnya jika data portofolio tersebut ingin difilter, dicari, atau digunakan kembali untuk fitur lain.
 
-3. Perbedaan utama antara keduanya terletak pada tahap perancangan dan eksekusi. Perintah makemigrations bertugas untuk mendeteksi perubahan yang kita buat pada file models.py dan mencatatnya ke dalam bentuk berkas cetak biru (migration file) di folder migrations. Perintah ini baru sebatas menyiapkan draf rencana dan belum mengubah struktur database yang sebenarnya. Sementara itu, perintah migrate adalah langkah eksekusi yang akan membaca berkas cetak biru tersebut dan benar-benar menerapkannya ke dalam database nyata.
+3. Perbedaan utama antara keduanya terletak pada tahap perancangan dan eksekusi. Perintah makemigrations bertugas untuk mendeteksi perubahan yang buat pada file models.py dan mencatatnya ke dalam bentuk berkas cetak biru (migration file) di folder migrations. Perintah ini baru sebatas menyiapkan draf rencana dan belum mengubah struktur database yang sebenarnya. Sementara itu, perintah migrate adalah langkah eksekusi yang akan membaca berkas cetak biru tersebut dan benar-benar menerapkannya ke dalam database nyata.
 
-Sebagai contoh, saat menambahkan atribut baru di model Experience, yaitu documentation_url = models.URLField(blank=True, null=True). Setelah menambahkan baris tersebut di models.py, kita wajib menjalankan python manage.py makemigrations terlebih dahulu agar Django membuatkan file instruksi migrasinya. Setelah itu, kita menjalankan python manage.py migrate supaya kolom documentation_url tersebut benar-benar dibuat sebagai kolom baru di tabel database kita.
+Sebagai contoh, saat menambahkan atribut baru di model Experience, yaitu documentation_url = models.URLField(blank=True, null=True). Setelah menambahkan baris tersebut di models.py, wajib menjalankan python manage.py makemigrations terlebih dahulu agar Django membuatkan file instruksi migrasinya. Setelah itu, menjalankan python manage.py migrate supaya kolom documentation_url tersebut benar-benar dibuat sebagai kolom baru di tabel database.
 
 ### Tugas 3
 ## Deskripsi Proyek Tugas 3
@@ -48,7 +48,7 @@ Karena jika membuat form HTML secara manual akan lebih sulit dan berisiko error.
 
 Dengan ModelForm Django, akan otomatis membuat elemen form HTML sesuai dengan struktur field/kolom di model database, menangani validasi data otomatis, dan menyimpan data langsung ke database dengan 'form.save()'
 
-'{% csrf_token %}' adalah fitur keamanan wajib di Django untuk mencegah serangan CSRF (Cross-Site Request Forgery). Serangan CSRF dapat terjadi ketika ada situs yang mencoba mengirimkan request (seperti 'POST') ke aplikasi kita atas nama pengguna yang sedang login tanpa sepengetahuan mereka. Tag '{% csrf_token %}' akan menghasilkan token unik yang divalidasi oleh Django. Jika request yang masuk tidak membawa token cocok ini, Django akan menolak untuk menjaga keamanan data.
+'{% csrf_token %}' adalah fitur keamanan wajib di Django untuk mencegah serangan CSRF (Cross-Site Request Forgery). Serangan CSRF dapat terjadi ketika ada situs yang mencoba mengirimkan request (seperti 'POST') ke aplikasi atas nama pengguna yang sedang login tanpa sepengetahuan mereka. Tag '{% csrf_token %}' akan menghasilkan token unik yang divalidasi oleh Django. Jika request yang masuk tidak membawa token cocok ini, Django akan menolak untuk menjaga keamanan data.
 
 **2. Pada Tutorial 03, kita membahas format data JSON dan XML. Mengapa JSON lebih disukai dalam pengembangan aplikasi web modern dibandingkan XML?**
 Meskipun XML dan JSON sama-sama digunakan untuk pertukaran data, JSON menjadi standar utama diaplikasi web modern karena beberapa alasan, seperti:
@@ -105,3 +105,48 @@ Saya menggunakan pendekatan berbasis masalah secara bertahap. Dibandingkan memin
 1. AI sempat memberikan contoh kode HTML standar untuk tombol login dan navbar. Namun, saya memilih untuk tidak langsung copy, melainkan menyelaraskan perbaikan sintaks yang diberikan ke dalam kode HTML yang sudah saya buat. 
 2. Ketika terjadi error NoReverseMatch with arguments, AI awalnya hanya berfokus pada perbaikan baris tag {% url %} di HTML. Saya menyadari dan mengecek secara mandiri bahwa masalah utamanya juga bersumber dari nama atribut primary key pada model serta memastikan looping membungkus elemen tersebut dengan benar. 
 3. AI tidak dapat memantau network request atau console di Developer Tools browser saya secara langsung. Saya melakukan inspeksi mandiri pada tab Console browser saat tombol star diklik untuk memverifikasi apakah status respon dari server bernilai 200, 404 Not Found, atau 403 Forbidden. 
+
+### Tugas 5
+## Deskripsi Proyek Tugas 5
+Tugas 5 berfokus pada transformasi antarmuka dan mekanisme pertukaran data pada aplikasi web Django dari Server-Side Rendering (SSR) menjadi Client-Side Rendering berbasis AJAX (Asynchronous JavaScript and XML). Pengembangan ini bertujuan untuk meningkatkan pengalaman pengguna (UX) dengan meminimalisir page reload saat berinteraksi dengan data proyek. Dengan mengimplementasikan Asynchronous Data Rendering (AJAX Fetch), pencarian dinamis dengan Debouncing, manajemen data berbasis modal & AJAX, sistem notifikasi Toast, dan penanganan state UI dan pengamanan XSS. 
+
+## Pertanyaan Reflektif 
+**1.Jelaskan apa itu debouncing dan mengapa teknik ini penting diterapkan pada fitur pencarian yang menggunakan AJAX!**
+Debouncing adalah teknik pemrograman yang digunakan untuk menunda eksekusi suatu fungsi (seperti pengiriman request AJAX) sampai pengguna berhenti melakukan aksi (seperti mengetik di kolom pencarian) selama interval waktu tertentu (misalnya 300–500 ms). Jika pengguna mengetik huruf baru sebelum jeda waktu tersebut selesai, timer akan di-reset dari awal.
+
+Tanpa debouncing, setiap kali pengguna mengetik satu karakter (misalnya pada event input atau keyup), aplikasi akan langsung mengirimkan HTTP request ke server melalui fetch(). 
+- Jika pengguna mengetik kata "Project" (7 huruf), maka akan ada 7 kali request beruntun ke server. 
+- Dampak: Beban server membengkak (over-fetching), penggunaan bandwidth boros, dan berisiko terjadi race condition (di mana respon dari pencarian karakter pertama tiba lebih lambat daripada karakter terakhir, sehingga hasil di layar menjadi salah/tidak akurat). Dengan debouncing, request hanya dikirim 1 kali setelah pengguna benar-benar selesai mengetik.
+
+**2.Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?**
+Penggunaan await memberi tahu JavaScript untuk menghentikan sementara eksekusi kode di dalam fungsi async sampai Promise dari fetch() (atau dari .json()) selesai (resolved). await membuat penulisan kode asinkron terasa seperti sinkron, sehingga variabel yang dipanggil setelah baris await dipastikan sudah berisi objek HTTP Response atau data JSON yang siap diolah.
+
+Jika memanggil fetch() tanpa await (dan tanpa .then()), variabel penampung tidak akan berisi data JSON dari server, melainkan berisi objek Promise <pending>. 
+- Dampaknya: Saat mencoba membaca atau mengiterasi data (misalnya data.forEach(...)), JavaScript akan melempar error seperti TypeError: data.forEach is not a function atau menampilkan data undefined, karena JavaScript langsung mengeksekusi kode rendering sebelum respon data selesai diunduh dari server.
+
+**3.Jelaskan apa itu serangan XSS (Cross-Site Scripting) dan mengapa data yang ditampilkan melalui AJAX/JavaScript lebih rentan terhadap serangan ini daripada data yang ditampilkan langsung melalui template Django!**
+XSS adalah celah keamanan di mana peretas (attacker) berhasil memasukkan (inject) skrip berbahaya (biasanya berupa JavaScript) ke dalam data aplikasi web. Saat pengguna lain membuka halaman yang memuat data tersebut, browser akan mengeksekusi skrip jahat tersebut secara otomatis (misalnya mencuri cookie session, token autentikasi, atau melakukan tindakan merugikan atas nama pengguna).
+
+- Di Template Django (Server-Side Rendering): 
+Django secara otomatis menerapkan fitur auto-escaping pada semua variabel yang di-render via tag {{ variable }}. Jika ada input berisi <script>alert('xss')</script>, Django secara otomatis merubahnya menjadi entitas aman &lt;script&gt;... sehingga tidak tereksekusi sebagai kode HTML/JS di browser. 
+
+- Di AJAX/JavaScript (Client-Side Rendering): 
+Saat mengambil data JSON via fetch() dan merender kartu/grid menggunakan JavaScript (misalnya menyisipkan teks langsung ke elemen HTML dengan properti .innerHTML = data.title), JavaScript tidak memiliki proteksi auto-escaping bawaan. Jika teks data.title mengandung elemen HTML atau atribut onerror jahat, browser akan langsung mengeksekusinya sebagai HTML/JS aktif. Oleh karena itu, di Tugas 5 wajib melakukan escaping manual (atau menggunakan textContent) di JavaScript serta membersihkan input di server dengan strip_tags.
+
+## AI Disclosure
+- Tool yang Digunakan: Google Gemini
+- Tautan Log / Sesi percakapan: [Sesi Percakapan Gemini]
+(https://share.gemini.google/AO7SLrDDWKrw) 
+- Strategi Prompting: 
+1. Menanyakan klarifikasi struktur HTML secara spesifik untuk memastikan posisi elemen (tombol uji coba toast) berada di tempat yang tepat sesuai petunjuk instruksi tugas. 
+2. Meminta penjelasan mengenai cara merubah URL berbagi (share link) Google Drive menjadi format thumbnail direct link beserta pembedahan struktur parameternya (id dan sz). 
+3. Mengirimkan kendala operasional (notifikasi toast yang me-return error "terjadi kesalahan") untuk dianalisis indikasi penyebabnya secara sistematis dari sisi input form, token CSRF, hingga validation error.
+
+- Bagian yang Dibantu AI:
+1. Penjelasan logika posisi elemen HTML mengenai frasa "di bawah div project-header" yang berarti diletakkan setelah tag penutup </div>, bukan di dalam tag header.
+2. Ekstraksi FILE_ID dari URL Google Drive (1SVJnXo0eIgt4gTAk0uu08SGEKDQGplwN) dan penyusunan struktur URL thumbnail ([https://drive.google.com/thumbnail?id=...&sz=w1000](https://drive.google.com/thumbnail?id=...&sz=w1000)) agar gambar bisa dirender langsung di tag <img> HTML.
+3. Analisis potensi error pada pengiriman form AJAX, meliputi kualifikasi input URLField yang terpotong, pemeriksaan token CSRF, dan panduan langkah inspection via DevTools Network tab serta log terminal Django.
+
+- Keterbatasan AI & Perbaikan Mandiri:
+1. AI memberikan beberapa kemungkinan error, namun verifikasi bahwa URL di dalam field input benar-benar terpotong di bagian akhir (...thumbnail?id=1SVJnXo0eIgt4gTAk0uu08SGEKDQGplw) tetap diidentifikasi dan diperbaiki secara mandiri di tampilan browser.
+2. AI tidak bisa melihat respon HTTP secara langsung, sehingga eksekusi Inspect Element (F12) pada tab Network dan pengecekan terminal python manage.py runserver untuk melihat traceback 400/500 dilakukan secara langsung pada lingkungan lokal.
