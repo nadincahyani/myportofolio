@@ -150,3 +150,74 @@ Saat mengambil data JSON via fetch() dan merender kartu/grid menggunakan JavaScr
 - Keterbatasan AI & Perbaikan Mandiri:
 1. AI memberikan beberapa kemungkinan error, namun verifikasi bahwa URL di dalam field input benar-benar terpotong di bagian akhir (...thumbnail?id=1SVJnXo0eIgt4gTAk0uu08SGEKDQGplw) tetap diidentifikasi dan diperbaiki secara mandiri di tampilan browser.
 2. AI tidak bisa melihat respon HTTP secara langsung, sehingga eksekusi Inspect Element (F12) pada tab Network dan pengecekan terminal python manage.py runserver untuk melihat traceback 400/500 dilakukan secara langsung pada lingkungan lokal.
+
+### Tugas 6
+## Pertanyaan Reflektif
+**1. Jelaskan apa yang dimaksud dengan REST dan mengapa mengembalikan JSON saja belum cukup untuk menyebut sebuah API sebagai RESTful! Jelaskan pula perbedaan PUT dan PATCH beserta contoh kapan masing-masing sebaiknya digunakan!**
+REST (*Representational State Transfer*) adalah sebuah gaya arsitektur antarmuka perangkat lunak yang memanfaatkan protokol HTTP secara konsisten untuk komunikasi data *stateless* antar sistem. Mengembalikan respon berformat JSON saja belum otomatis membuat sebuah API dinamakan RESTful. Sebuah API baru dianggap RESTful jika mematuhi prinsip-prinsip utama REST, antara lain:
+- Statelessness: Setiap permintaan (*request*) dari klien harus membawa semua informasi autentikasi dan konteks yang diperlukan tanpa bergantung pada status sesi di server.
+- Uniform Interface: Menggunakan metode HTTP standar (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`) secara semantic sesuai dengan aksinya pada URI sumber daya (*resource*).
+- Standard HTTP Status Codes: Mengembalikan kode status HTTP yang tepat (seperti `200 OK`, `201 Created`, `400 Bad Request`, `403 Forbidden`, `404 Not Found`).
+- Pengelolaan Resource via URI: Mengidentifikasi data sebagai *resource* menggunakan entitas URI yang terstruktur (contoh: `/api/v1/projects/`).
+
+
+Perbedaan `PUT` dan `PATCH` adalah `PUT` (Full Replacement) digunakan untuk mengganti/memperbarui seluruh isi entitas data. Klien harus mengirimkan seluruh *field* data. Jika ada *field* opsional yang tidak dikirim, nilai *field* tersebut pada database bisa berubah menjadi `null` atau tereset ke nilai default. Contohnya ketika pengguna memperbarui seluruh profil proyek melalui form lengkap di mana semua *field* (judul, deskripsi, tanggal, tautan) dikirimkan ulang secara menyeluruh. Sedangkan `PATCH` (Partial Modification):** Digunakan untuk memperbarui sebagian *field* data saja tanpa memengaruhi *field* lainnya yang tidak dikirimkan dalam *request payload*. Contohnya pada fitur toggle status *star/favorite* pada kartu proyek, di mana klien hanya mengoperasikan perubahan status `is_starred` tanpa perlu mengirimkan ulang data `title` atau `description`.
+
+
+**2. Jelaskan peran serializer pada Django REST Framework! Apa keuntungannya dibandingkan merakit dictionary secara manual dengan JsonResponse seperti pada Tutorial 05?**
+Peran Serializer di DRF:
+Serializer dalam Django REST Framework berfungsi sebagai jembatan dua arah (*two-way converter*):
+- Serialization: Mengonversi objek kompleks Django (seperti instance model atau QuerySet) menjadi format data primitif Python (seperti dictionary) yang siap dirender menjadi JSON/XML.
+- Deserialization & Validation: Mengonversi data JSON yang dikirimkan oleh klien kembali menjadi tipe data Python, memvalidasi struktur serta tipe data tersebut sebelum disimpan ke dalam database.
+
+
+Keuntungan dibanding `JsonResponse` Manual adalah:
+- Validasi Data Otomatis & Terpusat: Serializer menyediakan metode `.is_valid()`, serta kustomisasi validasi seperti `validate_<field_name>` untuk pencegahan input tidak valid atau XSS (`strip_tags`).
+- Pengurangan Boilerplate Code: Pada `JsonResponse` manual, setiap *field* dari objek model harus dipetakan secara manual ke dalam dictionary satu per satu. `ModelSerializer` melakukan pemetaan ini secara otomatis berdasarkan definisi model.
+- Penanganan Relasi yang Rapi:** Serializer mempermudah penanganan data terelasi (*nested objects* atau *foreign keys*) serta field dinamis (`SerializerMethodField`).
+- Pesan Error yang Terstruktur: Jika terjadi kegagalan validasi, serializer secara otomatis mengembalikan struktur JSON berisi daftar pesan kesalahan per *field* (`serializer.errors`).
+
+
+**3. Jelaskan perbedaan autentikasi dan otorisasi pada Django REST Framework! Mengapa hak akses harus diperiksa dengan permission class di server, bukan hanya dengan menyembunyikan tombol di template?**
+Perbedaan Autentikasi dan Otorisasi:
+- Autentikasi (Authentication): Memverifikasi siapa identitas pengguna yang sedang membuat *request* (misal: mengecek apakah kredensial sesi/cookie atau token yang dikirimkan valid dan mengidentifikasi pengguna sebagai User A).
+- Otorisasi (Authorization): Menentukan apakah pengguna yang teridentifikasi tersebut memiliki izin/hak akses untuk melakukan aksi tertentu terhadap sumber daya yang diminta (misal: apakah pengguna biasa boleh menghapus data milik pengguna lain).
+
+
+Alasan Pemeriksaan Hak Akses Wajib di Server-Side (*Permission Class*):
+- Menyembunyikan tombol di tampilan UI/template HTML hanyalah bentuk peningkatan pengalaman pengguna (*User Experience / UX*). Hal tersebut tidak memberikan perlindungan keamanan nyata, karena pengguna yang berniat jahat dapat dengan mudah melewati antarmuka HTML dengan cara:
+- Mengirimkan *request* HTTP langsung (menggunakan tools seperti Postman, cURL, atau via console DevTools browser).
+- Mengedit DOM HTML di browser untuk menampilkan kembali tombol yang disembunyikan.
+
+
+Oleh karena itu, server wajib secara independen memvalidasi izin akses menggunakan *Permission Class* (seperti `IsPortfolioOwnerOrEditorOrReadOnly`) pada setiap *endpoint* API untuk memastikan request yang tidak sah langsung ditolak dengan status HTTP `403 Forbidden`.
+
+
+**4. Jelaskan mengapa permintaan yang mengubah data tetap memerlukan token CSRF ketika API memakai SessionAuthentication! Mengapa test yang memakai force_authenticate tidak cukup untuk membuktikan bahwa perlindungan CSRF berjalan?**
+Permintaan pengubahan data tetap memerlukan token CSRF pada `SessionAuthentication` karena ketika API menggunakan `SessionAuthentication`, kredensial pengguna disimpan dan dikirimkan oleh browser secara otomatis melalui cookie sesi (`sessionid`) pada setiap request ke domain yang sama. Mekanisme ini rentan terhadap serangan **Cross-Site Request Forgery (CSRF)**, di mana situs berbahaya milik pihak ketiga dapat memicu browser milik korban (yang sedang login) untuk mengirimkan request pengubah data (`POST`, `PUT`, `DELETE`) tanpa sepengetahuan korban. Token CSRF wajib disertakan dalam *header* (seperti `X-CSRFToken`) untuk meyakinkan server bahwa request tersebut benar-benar diinisiasi dari halaman legitimasi aplikasi kita, bukan dari situs asing.
+
+
+`force_authenticate` tidak cukup untuk membuktikan bahwa perlindungan CSRF berjalan karena pada pengujian DRF (*Unit Testing*), metode `force_authenticate(user)` sengaja dirancang untuk **mem-bypass seluruh rantai autentikasi dan middleware CSRF** agar pengembang dapat menguji logika bisnis internal dari *view* tanpa terhalang oleh mekanisme autentikasi. Karena pengujian dengan `force_authenticate` melewati proses pengecekan CSRF, keberhasilan pengujian tersebut **tidak membuktikan** bahwa middleware CSRF bekerja atau memblokir request yang tidak sah. Untuk membuktikan perlindungan CSRF berjalan dengan benar, pengujian harus menggunakan `APIClient(enforce_csrf_checks=True)` dan menyimulasikan aliran cookie serta token CSRF yang nyata.
+
+
+## AI Disclosure
+- Tool yang Digunakan: Google Gemini
+- Tautan Log / Sesi percakapan: [Sesi Percakapan Gemini]
+(https://share.gemini.google/bgfp3s9eaJh8)
+- Strategi Prompting:
+1. Menanyakan klarifikasi konseptual dasar Django, seperti fungsi pemisahan import `from django.db import models` dan `from main.models import ...` serta cara melakukan import serializers pada Django REST Framework (DRF).
+2. Meminta panduan operasional untuk mengecek daftar akun superuser atau user terdaftar di database lokal Django via shell, halaman admin, maupun ekstensi database.
+3. Mengonsultasikan kendala integrasi frontend saat menerapkan DRF yang memunculkan pesan error "Gagal memuat data experience" serta pemisahan struktur routing antara `urls.py` utama dan `api_urls.py`.
+4. Melakukan *debugging* lanjutan terhadap error unit testing API terkait `KeyError: 'csrftoken'` pada `SessionAuthentication` serta error runtime JavaScript `ReferenceError: Cannot access 'expId' before initialization` pada komponen kartu *Experience*.
+
+
+- Bagian yang Dibantu AI:
+1. Penjelasan detail fungsi dan perbedaan baris import Django models serta cara penulisan struktur `ModelSerializer` di DRF.
+2. Panduan langkah-langkah pengecekan user menggunakan perintah interaktif `python manage.py shell` (`User.objects.filter(is_superuser=True)`).
+3. Analisis penyebab kegagalan pemuatan data asinkron (*fetch*) pada halaman web ketika endpoint API dipisah ke file `api_urls.py`.
+4. Solusi penambahan tag `{% csrf_token %}` di template `experience.html` serta penyesuaian penamaan variabel dataset JavaScript (`articleElement.dataset.id = exp.id`) pada fungsi pembuat elemen kartu pengalaman.
+
+
+- Keterbatasan AI & Perbaikan Mandiri:
+1. AI memberikan panduan umum penanganan error pada file template dan script, namun implementasi nyata pemindahan file template secara utuh serta penyesuaian baris kode di lokal tetap diverifikasi dan diuji langsung melalui terminal menggunakan perintah `python manage.py test main`.
+2. Eksekusi pengecekan tab Network di browser (F12) dan verifikasi status *response* JSON di endpoint `http://localhost:8000/api/v1/experience/?format=json` dilakukan secara mandiri di lingkungan lokal.
